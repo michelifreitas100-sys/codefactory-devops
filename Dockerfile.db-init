@@ -1,0 +1,13 @@
+# Container dedicado apenas a preparar/inicializar as tabelas do banco.
+# Demonstra o uso de containers também para tarefas de banco de dados
+# (critério "Utilização de containers - Docker": Banco / backup / criar tabelas).
+FROM python:3.12-slim
+
+WORKDIR /usr/src/app
+
+COPY app/requirements-db.txt ./requirements-db.txt
+RUN pip install --no-cache-dir -r requirements-db.txt
+
+COPY app/init_db.py ./
+
+CMD ["python", "init_db.py"]

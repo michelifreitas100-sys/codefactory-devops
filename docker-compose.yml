@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  # Aplicação principal (API de tarefas)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: codefactory_app
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: codefactory_db
+    environment:
+      - POSTGRES_DB=codefactory
+      - POSTGRES_USER=codefactory
+      - POSTGRES_PASSWORD=codefactory
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # Container "de tarefa única" que cria as tabelas do banco e finaliza.
+  # Mostra o uso de container para script/inicialização, não só para servir a app.
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.db-init
+    container_name: codefactory_db_init
+    environment:
+      - DB_HOST=db
+      - DB_NAME=codefactory
+      - DB_USER=codefactory
+      - DB_PASSWORD=codefactory
+    depends_on:
+      - db
+
+volumes:
+  db_data:

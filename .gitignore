@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Ambiente
+.env
+
+# Docker
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db

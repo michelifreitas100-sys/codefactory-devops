@@ -48,3 +48,12 @@ def test_list_tasks(client):
     response = client.get("/tasks")
     assert response.status_code == 200
     assert isinstance(response.json, list)
+
+def test_create_task_with_whitespace_title(client):
+    response = client.post("/tasks", json={"title": "   "})
+    assert response.status_code == 400
+
+
+def test_create_task_title_too_long(client):
+    response = client.post("/tasks", json={"title": "a" * 121})
+    assert response.status_code == 400

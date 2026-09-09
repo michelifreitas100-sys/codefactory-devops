@@ -41,10 +41,14 @@ def list_tasks():
 def create_task():
     global next_id
     data = request.get_json(silent=True) or {}
-    title = data.get("title")
+    raw_title = data.get("title")
+    title = raw_title.strip() if isinstance(raw_title, str) else None
 
     if not title:
-        return jsonify({"error": "O campo 'title' é obrigatório"}), 400
+        return jsonify({"error": "O campo 'title' é obrigatório e não pode estar vazio"}), 400
+
+    if len(title) > 120:
+        return jsonify({"error": "O campo 'title' deve ter no máximo 120 caracteres"}), 400
 
     task = {
         "id": next_id,
